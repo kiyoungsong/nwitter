@@ -10,7 +10,7 @@ import { Home } from "../rotues/Home";
 import { Profile } from "../rotues/Profile";
 import Navigation from "./Navigation";
 
-export const AppRouter = ({ isLoggedIn }) => {
+export const AppRouter = ({ isLoggedIn, userObj }) => {
   return (
     <Router>
       {isLoggedIn && <Navigation />}
@@ -18,7 +18,7 @@ export const AppRouter = ({ isLoggedIn }) => {
         {isLoggedIn ? (
           <>
             <Route exact path="/">
-              <Home />
+              <Home userObj={userObj} />
             </Route>
             <Route exact path="/profile">
               <Profile />
