@@ -11,7 +11,15 @@ function App() {
     authService.onAuthStateChanged((user) => {
       if (user) {
         setIsLoggedIn(true);
-        setUserObj(user);
+        // 첫번째 방법
+        setUserObj({
+          displayName: user.displayName,
+          uid: user.uid,
+          updateProfile: (args) => user.updateProfile(args),
+        });
+
+        // 두번째 방법
+        // setUserObj(user);
       } else {
         setIsLoggedIn(false);
         setUserObj(null);
@@ -19,10 +27,31 @@ function App() {
       setInit(true);
     });
   }, []);
+
+  const refreshUser = () => {
+    // 큰 obj일 경우 react에게 결정장애가 옴
+    // 그래서 첫번째 방법은 obj의 크기를 줄임
+    // 첫번째 방법
+    const user = authService.currentUser;
+    setUserObj({
+      displayName: user.displayName,
+      uid: user.uid,
+      updateProfile: (args) => user.updateProfile(args),
+    });
+
+    // 두번째 방법
+    // 빈 {}에 사본을 만들어 새로운 오브젝트를 생성하여 넘김
+    // setUserObj(Object.assign({}, user));
+  };
+
   return (
     <>
       {init ? (
-        <AppRouter isLoggedIn={isLoggedIn} userObj={userObj} />
+        <AppRouter
+          refreshUser={refreshUser}
+          isLoggedIn={isLoggedIn}
+          userObj={userObj}
+        />
       ) : (
         "Initializing..."
       )}
